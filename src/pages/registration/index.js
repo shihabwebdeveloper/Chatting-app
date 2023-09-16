@@ -106,20 +106,20 @@ const Registration = () => {
   };
 
   return (
-    <div className="flex px-5 md:px-0">
+    <div className="flex">
       <ToastContainer position="bottom-center" theme="dark" />
-      <div className="w-full md:w-2/4 lg:flex bg-gray-300 sm:h-screen justify-end md:px-0">
-        <div className="lg:mr-16 mt-6 md:mt-36">
-          <h1 className="font-nunito font-bold lg:text-4xl text-3xl text-center lg:text-left text-zinc-900 mb-3">
+      <div className="w-full lg:w-2/4  px-5 lg:flex bg-gray-300 h-screen md:h-screen land:h-full justify-end lg:px-3 xl:px-0">
+        <div className="lg:mr-16 mt-6 lg:mt-6 xl:mt-36 md:mt-36">
+          <h1 className="font-nunito font-bold xl:text-4xl text-3xl text-center xl:text-left text-zinc-900 mb-3">
             Get started with easily register
           </h1>
-          <p className="font-nunito font-bold text-xl text-center lg:text-left text-zinc-900 opacity-80">
+          <p className="font-nunito font-bold text-xl text-center xl:text-left md:mt-4 lg:mt-0 text-zinc-900 opacity-80">
             Free register and you can enjoy it
           </p>
-          <div className="relative mt-11 md:mt-16">
+          <div className="relative mt-9 xl:mt-16">
             <input
               type="email"
-              className="border-black border-solid border lg:w-96 w-full outline-none bg-gray-300 text-black  rounded-lg py-5 md:py-6 px-9 lg:px-14"
+              className="border-black border-solid border xl:w-96 w-full outline-none bg-gray-300 text-black  rounded-lg py-5 md:py-6 px-9 lg:px-14"
               onChange={handleEmail}
               value={email}
             ></input>
@@ -127,15 +127,15 @@ const Registration = () => {
               Email Address
             </p>
             {emailerr && (
-              <p className="absolute lg:w-96 w-full text-white bg-red-600 font-nunito font-semibold text-xs sm:p-1 md:text-sm mt-2.5 p-1.5 rounded-md sm:-bottom-7">
+              <p className="absolute xl:w-96 w-full text-white bg-red-600 font-nunito font-semibold text-xs sm:p-1 md:text-sm mt-2.5 p-1.5 rounded-md sm:-bottom-7">
                 {emailerr}
               </p>
             )}
           </div>
-          <div className="relative mt-10 md:mt-16">
+          <div className="relative mt-9 lg:mt-10 xl:mt-16">
             <input
               type="text"
-              className="border-black outline-none bg-gray-300 border-solid border lg:w-96 w-full rounded-lg py-5 md:py-6 px-9 lg:px-14"
+              className="border-black outline-none bg-gray-300 border-solid border xl:w-96 w-full rounded-lg py-5 md:py-6 px-9 lg:px-14"
               onChange={handleFullname}
               value={fullname}
             ></input>
@@ -143,12 +143,12 @@ const Registration = () => {
               Full Name
             </p>
             {fullnameerr && (
-              <p className="absolute lg:w-96 w-full text-white bg-red-600 font-nunito font-semibold text-xs sm:p-1 md:text-sm mt-2.5 p-1.5 rounded-md sm:-bottom-7">
+              <p className="absolute xl:w-96 w-full text-white bg-red-600 font-nunito font-semibold text-xs sm:p-1 md:text-sm mt-2.5 p-1.5 rounded-md sm:-bottom-7">
                 {fullnameerr}
               </p>
             )}
           </div>
-          <div className="relative mt-10 md:mt-16 lg:w-96 w-full">
+          <div className="relative mt-9 lg:mt-10 md:mt-16 xl:w-96 w-full">
             <input
               type={passwordshow ? "text" : "password"}
               className="border-black outline-none bg-gray-300 border-solid border rounded-lg md:py-6 py-5 w-full px-9 lg:px-14"
@@ -170,7 +170,7 @@ const Registration = () => {
               />
             )}
             {passworderr && (
-              <p className="absolute lg:w-96 w-full text-white bg-red-600 font-nunito font-semibold text-xs sm:p-1 md:text-sm mt-2.5 p-1.5 rounded-md sm:-bottom-7">
+              <p className="absolute xl:w-96 w-full text-white bg-red-600 font-nunito font-semibold text-xs sm:p-1 md:text-sm mt-2.5 p-1.5 rounded-md sm:-bottom-7">
                 {passworderr}
               </p>
             )}
@@ -192,12 +192,12 @@ const Registration = () => {
             ) : (
               <button
                 onClick={handleSubmit}
-                className="bg-gray-800 lg:w-96 w-full font-nunito font-bold text-xl text-white py-5 rounded-[86px] mt-10 md:mt-14"
+                className="bg-gray-800 xl:w-96 w-full font-nunito font-bold text-xl text-white py-5 rounded-[86px] mt-10 md:mt-14"
               >
                 Sign Up
               </button>
             )}
-            <p className="font-opensans font-regular text-sm text-indigo-900 text-center md:w-96 w-full mt-6 md:mt-9">
+            <p className="font-opensans font-regular text-sm text-indigo-900 text-center lg:w-96 w-full mt-6 xl:mt-9">
               Already have an account ?
               <Link
                 to="/login"
@@ -209,9 +209,9 @@ const Registration = () => {
           </div>
         </div>
       </div>
-      <div className="w-2/4 hidden md:block">
+      <div className="w-2/4 hidden lg:block">
         <img
-          className="object-cover w-full h-full xl:h-screen"
+          className="object-cover w-full h-full lg:h-screen"
           src="images/reg-img.png"
           alt="Reg img"
         />
