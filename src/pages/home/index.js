@@ -32,43 +32,42 @@ const Home = () => {
     }
   }, []);
 
-  return (<>
-    {
-    data && (
-      <div className="flex justify-evenly">
-        {data.emailVerified ? (
-          <>
-            <div className="w-[200px]">
-              <Sidebar />
+  return (
+    <>
+      {data && (
+        <div className="flex justify-evenly">
+          {data.emailVerified ? (
+            <>
+              <div className="w-[200px]">
+                <Sidebar active="home" />
+              </div>
+              <div className="w-1/4">
+                <Search />
+                <GroupList />
+                <FrirendRequest />
+              </div>
+              <div className="w-1/4">
+                <Friends />
+                <MyGroups />
+              </div>
+              <div className="w-1/4">
+                <UserList />
+                <BlockedUser />
+              </div>
+            </>
+          ) : (
+            <div className="h-screen bg-primary w-full flex justify-center items-center">
+              <div>
+                <h3 className="w-full text-nunito text-bold text-5xl text-primary p-9 bg-white rounded-lg">
+                  Please verify your Email
+                </h3>
+              </div>
             </div>
-            <div className="w-1/4">
-              <Search />
-              <GroupList />
-              <FrirendRequest />
-            </div>
-            <div className="w-1/4">
-              <Friends />
-              <MyGroups />
-            </div>
-            <div className="w-1/4">
-              <UserList />
-              <BlockedUser />
-            </div>
-          </>
-        ) : (
-          <div className="h-screen bg-primary w-full flex justify-center items-center">
-            <div>
-              <h3 className="w-full text-nunito text-bold text-5xl text-primary p-9 bg-white rounded-lg">
-                Please verify your Email
-              </h3>
-            </div>
-          </div>
-        )}
-      </div>
-    )
-  }
-  </>)
-  
+          )}
+        </div>
+      )}
+    </>
+  );
 };
 
 export default Home;
