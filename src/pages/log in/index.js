@@ -91,7 +91,7 @@ const Login = () => {
       set(ref(db, "users/" + user.user.uid), {
         username: user.user.displayName,
         email: user.user.email,
-        profilePhoto:user.user.photoURL,
+        profilePhoto: user.user.photoURL,
       });
       dispacth(userLoginInfo(user.user));
       localStorage.setItem("userInfo", JSON.stringify(user));
@@ -102,40 +102,47 @@ const Login = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex p-5 xl:p-0 lg:px-10 lg:py-0 md:mt-10 lg:mt-0">
       <ToastContainer position="bottom-center" theme="dark" />
-      <div className="w-2/4 flex justify-end">
-        <div className="mr-44 mt-36">
-          <h1 className="font-nunito font-bold text-4xl text-black mb-3">
+      <div className="xl:w-2/4 w-full xl:flex xl:justify-end">
+        <div className="xl:mr-44 mt-10 xl:mt-36">
+          <h1 className="font-nunito font-bold sm:text-center text-3xl xl:text-4xl text-black mb-3">
             Login to your account!
           </h1>
-          <p className="font-nunito font-regular text-xl text-para">
-            <img onClick={handleGoogleSignIn} src="images/Google.png" />
-          </p>
+          <a
+            href="#"
+            onClick={handleGoogleSignIn}
+            className="flex py-5 px-5 border border-solid w-52 rounded-lg mt-6 sm:hidden"
+          >
+            <img src="images/Google.png" />
+            <h2 className="font-opensans font-semibold text-sm text-primary ml-2.5">
+              Login with Google
+            </h2>
+          </a>
           <div className="relative mt-16">
             <input
               type="email"
-              className="border-para border-solid border-b w-96 py-6 outline-0"
+              className="border-para border-solid border-b w-full xl:w-96 py-6 outline-0"
               onChange={handleEmail}
               value={email}
             ></input>
-            <p className="font-nunito font-bold text-sm text-black absolute top-[-9px] left-0 bg-white">
+            <p className="font-nunito font-bold text-sm text-black absolute top-0 xl:top-[-9px] left-0 bg-white">
               Email Address
             </p>
             {emailerr && (
-              <p className="absolute w-96 text-white bg-red-600 font-nunito font-semibold text-sm mt-2.5 p-1.5 rounded-md">
+              <p className="absolute w-full xl:w-96 text-white bg-red-600 font-nunito font-semibold text-sm mt-2.5 p-1.5 rounded-md">
                 {emailerr}
               </p>
             )}
           </div>
-          <div className="relative mt-16  w-96">
+          <div className="relative mt-16">
             <input
               type={passwordshow ? "text" : "password"}
-              className="border-para border-solid border-b py-6 w-full outline-0"
+              className="border-para border-solid border-b py-6 w-full xl:w-96 outline-0"
               onChange={handlePassword}
               value={password}
             ></input>
-            <p className="font-nunito font-bold text-sm text-black absolute top-[-9px] left-0 bg-white">
+            <p className="font-nunito font-bold text-sm text-black absolute top-0 xl:top-[-9px] left-0 bg-white">
               Password
             </p>
             {passwordshow ? (
@@ -150,7 +157,7 @@ const Login = () => {
               />
             )}
             {passworderr && (
-              <p className="absolute text-white w-96 bg-red-600 font-nunito font-semibold text-sm mt-2.5 p-1.5 rounded-md">
+              <p className="absolute text-white w-full xl:w-96 bg-red-600 font-nunito font-semibold text-sm mt-2.5 p-1.5 rounded-md">
                 {passworderr}
               </p>
             )}
@@ -172,12 +179,22 @@ const Login = () => {
             ) : (
               <button
                 onClick={handleSubmit}
-                className="bg-gray-800 w-96 font-nunito font-semibold text-xl text-white py-5 rounded mt-14"
+                className="bg-gray-800 w-full xl:w-96 font-nunito font-semibold text-xl text-white py-5 rounded-lg xl:rounded mt-14"
               >
                 Login to Continue
               </button>
             )}
-            <p className="font-opensans font-regular text-sm text-indigo-900 text-center w-96 mt-9">
+            <a
+              href="#"
+              onClick={handleGoogleSignIn}
+              className="flex py-5 mt-7 justify-center border border-solid w-full shadow-sm rounded-lg xl:hidden"
+            >
+              <img src="images/Google.png" />
+              <h2 className="font-opensans font-semibold text-sm text-primary ml-3">
+                Login with Google
+              </h2>
+            </a>
+            <p className="font-opensans font-regular text-sm text-indigo-900 text-center xl:w-96 mt-6 xl:mt-9">
               Don’t have an account ?
               <Link
                 to="/registration"
@@ -186,7 +203,7 @@ const Login = () => {
                 Sign up
               </Link>
             </p>
-            <p className="text-center w-96 mt-6">
+            <p className="text-center xl:w-96 mt-3 xl:mt-9">
               <Link
                 to="/forgotpassword"
                 className="text-rose-600 font-opensans font-bold text-base"
@@ -197,7 +214,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <div className="w-2/4">
+      <div className="w-2/4 hidden xl:block">
         <img
           className="object-cover w-full h-screen"
           src="images/loginimg.png"

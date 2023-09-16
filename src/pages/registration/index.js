@@ -108,8 +108,8 @@ const Registration = () => {
   return (
     <div className="flex px-5 md:px-0">
       <ToastContainer position="bottom-center" theme="dark" />
-      <div className="w-full md:w-2/4 md:px-5 lg:flex bg-gray-300 justify-end md:px-0">
-        <div className="lg:mr-16 mt-5 md:mt-36">
+      <div className="w-full md:w-2/4 lg:flex bg-gray-300 sm:h-screen justify-end md:px-0">
+        <div className="lg:mr-16 mt-6 md:mt-36">
           <h1 className="font-nunito font-bold lg:text-4xl text-3xl text-center lg:text-left text-zinc-900 mb-3">
             Get started with easily register
           </h1>
@@ -127,12 +127,12 @@ const Registration = () => {
               Email Address
             </p>
             {emailerr && (
-              <p className="absolute lg:w-96 w-full text-white bg-red-600 font-nunito font-semibold text-sm mt-2.5 p-1.5 rounded-md">
+              <p className="absolute lg:w-96 w-full text-white bg-red-600 font-nunito font-semibold text-xs sm:p-1 md:text-sm mt-2.5 p-1.5 rounded-md sm:-bottom-7">
                 {emailerr}
               </p>
             )}
           </div>
-          <div className="relative mt-16">
+          <div className="relative mt-10 md:mt-16">
             <input
               type="text"
               className="border-black outline-none bg-gray-300 border-solid border lg:w-96 w-full rounded-lg py-5 md:py-6 px-9 lg:px-14"
@@ -143,12 +143,12 @@ const Registration = () => {
               Full Name
             </p>
             {fullnameerr && (
-              <p className="absolute lg:w-96 w-full text-white bg-red-600 font-nunito font-semibold text-sm mt-2.5 p-1.5 rounded-md">
+              <p className="absolute lg:w-96 w-full text-white bg-red-600 font-nunito font-semibold text-xs sm:p-1 md:text-sm mt-2.5 p-1.5 rounded-md sm:-bottom-7">
                 {fullnameerr}
               </p>
             )}
           </div>
-          <div className="relative mt-16 lg:w-96 w-full">
+          <div className="relative mt-10 md:mt-16 lg:w-96 w-full">
             <input
               type={passwordshow ? "text" : "password"}
               className="border-black outline-none bg-gray-300 border-solid border rounded-lg md:py-6 py-5 w-full px-9 lg:px-14"
@@ -170,7 +170,7 @@ const Registration = () => {
               />
             )}
             {passworderr && (
-              <p className="absolute text-white lg:w-96 w-full bg-red-600 font-nunito font-semibold text-sm mt-2.5 p-1.5 rounded-md">
+              <p className="absolute lg:w-96 w-full text-white bg-red-600 font-nunito font-semibold text-xs sm:p-1 md:text-sm mt-2.5 p-1.5 rounded-md sm:-bottom-7">
                 {passworderr}
               </p>
             )}
@@ -192,7 +192,7 @@ const Registration = () => {
             ) : (
               <button
                 onClick={handleSubmit}
-                className="bg-gray-800 lg:w-96 w-full font-nunito font-bold text-xl text-white py-5 rounded-[86px] mt-14"
+                className="bg-gray-800 lg:w-96 w-full font-nunito font-bold text-xl text-white py-5 rounded-[86px] mt-10 md:mt-14"
               >
                 Sign Up
               </button>
