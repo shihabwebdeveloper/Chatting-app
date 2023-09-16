@@ -106,16 +106,16 @@ const Login = () => {
       <ToastContainer position="bottom-center" theme="dark" />
       <div className="xl:w-2/4 w-full xl:flex xl:justify-end">
         <div className="xl:mr-44 mt-10 xl:mt-36">
-          <h1 className="font-nunito font-bold sm:text-center text-3xl xl:text-4xl text-black mb-3">
+          <h1 className="font-nunito font-bold sm:text-center xl:text-left text-3xl xl:text-4xl text-black mb-3">
             Login to your account!
           </h1>
           <a
             href="#"
             onClick={handleGoogleSignIn}
-            className="flex py-5 px-5 border border-solid w-52 rounded-lg mt-6 sm:hidden"
+            className="flex py-5 px-5 border border-solid w rounded-lg mt-6 sm:hidden xl:block"
           >
-            <img src="images/Google.png" />
-            <h2 className="font-opensans font-semibold text-sm text-primary ml-2.5">
+            <img className="inline-block" src="images/Google.png" />
+            <h2 className="font-opensans inline-block font-semibold text-sm text-primary ml-2.5">
               Login with Google
             </h2>
           </a>
@@ -189,8 +189,8 @@ const Login = () => {
               onClick={handleGoogleSignIn}
               className="flex py-5 mt-7 justify-center border border-solid w-full shadow-sm rounded-lg xl:hidden"
             >
-              <img src="images/Google.png" />
-              <h2 className="font-opensans font-semibold text-sm text-primary ml-3">
+              <img className="inline-block" src="images/Google.png" />
+              <h2 className="font-opensans inline-block font-semibold text-sm text-primary ml-3">
                 Login with Google
               </h2>
             </a>
