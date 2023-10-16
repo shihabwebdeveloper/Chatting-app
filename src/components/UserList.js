@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { AiFillMessage } from "react-icons/ai";
+import { FiSearch } from "react-icons/fi";
 import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import { useSelector } from "react-redux";
-import { FiSearch } from "react-icons/fi";
 
 const UserList = () => {
   const db = getDatabase();
@@ -182,7 +182,6 @@ const UserList = () => {
               </div>
             </div>
           ))}
-      {}
     </div>
   );
 };
