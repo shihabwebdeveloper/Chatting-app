@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   BsThreeDotsVertical,
   BsTriangleFill,
@@ -13,6 +13,10 @@ import Camera, { FACING_MODES, IMAGE_TYPES } from "react-html5-camera-photo";
 import "react-html5-camera-photo/build/css/index.css";
 
 const Chat = () => {
+
+  let [check, setCheck] = useState(false)
+
+
   function handleTakePhoto(dataUri) {
     // Do stuff with the photo...
     console.log("takePhoto");
@@ -211,36 +215,39 @@ const Chat = () => {
             <input className="hidden" type="file" />
             <GrGallery className="absolute right-5 bottom-1/4 text-2xl" />
           </label>
-          <BsFillCameraFill className="absolute right-14 bottom-1/4 text-2xl" />
-          <Camera
-            onTakePhoto={(dataUri) => {
-              handleTakePhoto(dataUri);
-            }}
-            onTakePhotoAnimationDone={(dataUri) => {
-              handleTakePhotoAnimationDone(dataUri);
-            }}
-            onCameraError={(error) => {
-              handleCameraError(error);
-            }}
-            idealFacingMode={FACING_MODES.ENVIRONMENT}
-            idealResolution={{ width: 640, height: 480 }}
-            imageType={IMAGE_TYPES.JPG}
-            imageCompression={0.97}
-            isMaxResolution={true}
-            isImageMirror={false}
-            isSilentMode={false}
-            isDisplayStartCameraError={true}
-            isFullscreen={false}
-            sizeFactor={1}
-            onCameraStart={(stream) => {
-              handleCameraStart(stream);
-            }}
-            onCameraStop={() => {
-              handleCameraStop();
-            }}
-          />
+          <BsFillCameraFill onClick={() => setCheck(!check)} className="absolute right-14 bottom-1/4 text-2xl" />
           <AiFillAudio className="absolute right-[90px] bottom-1/4 text-2xl" />
           <MdEmojiEmotions className="absolute right-[120px] bottom-1/4 text-2xl" />
+          {check &&
+            <Camera
+              onTakePhoto={(dataUri) => {
+                handleTakePhoto(dataUri);
+              }}
+              onTakePhotoAnimationDone={(dataUri) => {
+                handleTakePhotoAnimationDone(dataUri);
+              }}
+              onCameraError={(error) => {
+                handleCameraError(error);
+              }}
+              idealFacingMode={FACING_MODES.ENVIRONMENT}
+              idealResolution={{ width: 640, height: 480 }}
+              imageType={IMAGE_TYPES.JPG}
+              imageCompression={0.97}
+              isMaxResolution={true}
+              isImageMirror={false}
+              isSilentMode={false}
+              isDisplayStartCameraError={true}
+              isFullscreen={false}
+              sizeFactor={1}
+              onCameraStart={(stream) => {
+                handleCameraStart(stream);
+              }}
+              onCameraStop={() => {
+                handleCameraStop();
+              }}
+            />
+          }
+          
         </div>
         <button title="Send" className="ml-5 bg-primary px-4 rounded-xl">
           <TbSend className="text-3xl text-white" />
