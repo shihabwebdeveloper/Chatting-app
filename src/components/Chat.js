@@ -28,7 +28,7 @@ const Chat = () => {
 
   let handleMsg = () => {
     console.log(msg);
-    if (activeChatName.active.status == "single") {
+    if (activeChatName.active && activeChatName.active.status == "single") {
       set(push(ref(db, "singleMsg")), {
         msg: msg,
         whoSendId: data.uid,
@@ -88,7 +88,7 @@ const Chat = () => {
         </div>
       </div>
       <div className="pt-7 overflow-y-auto px-2 h-[700px] border-b border-solid border-slate-200">
-        {activeChatName.active.status == "single" ? (
+        {activeChatName.active && activeChatName.active.status == "single" ? (
           msgList.map((item) =>
             item.whoSendId == data.uid ? (
               item.whoReceiveId == activeChatName.active.id && (
