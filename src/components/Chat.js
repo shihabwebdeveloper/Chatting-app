@@ -13,10 +13,19 @@ import ModalImage from "react-modal-image";
 import Camera, { FACING_MODES, IMAGE_TYPES } from "react-html5-camera-photo";
 import "react-html5-camera-photo/build/css/index.css";
 import { useSelector } from "react-redux";
+import moment from "moment/moment";
 import { getDatabase, ref, set, push, onValue } from "firebase/database";
+import {
+  getStorage,
+  ref as stref,
+  uploadBytesResumable,
+  getDownloadURL,
+  uploadString,
+} from "firebase/storage";
 
 const Chat = () => {
   const db = getDatabase();
+  const storage = getStorage();
 
   let [check, setCheck] = useState(false);
   let [msg, setMsg] = useState("");
@@ -24,7 +33,7 @@ const Chat = () => {
   let [captureImage, setCaptureImage] = useState("");
   let data = useSelector((state) => state.userLoginInfo.userInfo);
   let activeChatName = useSelector((state) => state.activeChat);
-  console.log(activeChatName.active);
+  // console.log(activeChatName.active);
 
   let handleMsg = () => {
     console.log(msg);
@@ -35,17 +44,68 @@ const Chat = () => {
         whoSendName: data.displayName,
         whoReceiveId: activeChatName.active.id,
         whoReceiveName: activeChatName.active.name,
-        date: `${new Date().getDate()}-${
+        date: `${new Date().getFullYear()}-${
           new Date().getMonth() + 1
-        }-${new Date().getFullYear()}  ${new Date().getHours()}:${new Date().getMinutes()}`,
+        }-${new Date().getDate()}  ${new Date().getHours()}:${new Date().getMinutes()}`,
       });
     } else {
       console.log("ami mingle");
     }
   };
 
+  let handleImageUpload = (e) => {
+    console.log(e.target.files[0]);
+    const storageRef = stref(storage, "chatImg/" + e.target.files[0].name);
+
+    const uploadTask = uploadBytesResumable(storageRef, e.target.files[0]);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+      },
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          set(push(ref(db, "singleMsg")), {
+            img: downloadURL,
+            whoSendId: data.uid,
+            whoSendName: data.displayName,
+            whoReceiveId: activeChatName.active.id,
+            whoReceiveName: activeChatName.active.name,
+            date: `${new Date().getFullYear()}-${
+              new Date().getMonth() + 1
+            }-${new Date().getDate()}  ${new Date().getHours()}:${new Date().getMinutes()}`,
+          });
+        });
+      }
+    );
+  };
+
   function handleTakePhoto(dataUri) {
     setCaptureImage(dataUri);
+    const storageRef = stref(storage, "some-child");
+
+    uploadString(storageRef, dataUri, "data_url").then((snapshot) => {
+      getDownloadURL(storageRef).then((downloadURL) => {
+        set(push(ref(db, "singleMsg")), {
+          img: downloadURL,
+          whoSendId: data.uid,
+          whoSendName: data.displayName,
+          whoReceiveId: activeChatName.active.id,
+          whoReceiveName: activeChatName.active.name,
+          date: `${new Date().getFullYear()}-${
+            new Date().getMonth() + 1
+          }-${new Date().getDate()}  ${new Date().getHours()}:${new Date().getMinutes()}`,
+        }).then(() => {
+          setCheck(false);
+        });
+      });
+    });
   }
 
   useEffect(() => {
@@ -63,8 +123,8 @@ const Chat = () => {
       });
       setMsgList(arr);
     });
-  }, []);
-
+  }, [activeChatName.active && activeChatName.active.id]);
+  
   return (
     <div className="bg-white shadow-lg px-12 py-6 rounded-xl">
       <div className="flex items-center justify-between border-b border-solid border-gray-300 pb-6 w-full">
@@ -90,33 +150,67 @@ const Chat = () => {
       <div className="pt-7 overflow-y-auto px-2 h-[700px] border-b border-solid border-slate-200">
         {activeChatName.active && activeChatName.active.status == "single" ? (
           msgList.map((item) =>
-            item.whoSendId == data.uid ? (
-              item.whoReceiveId == activeChatName.active.id && (
-                <div className="mb-8 text-right">
-                  <div className="bg-primary inline-block py-3 px-9 rounded-md relative">
-                    <p className="font-poppins font-medium text-base text-white">
-                      {item.msg}
+            item.whoSendId == data.uid
+              ? item.whoReceiveId == activeChatName.active.id &&
+                (item.msg ? (
+                  <div className="mb-8 text-right group ">
+                    <div className="bg-primary inline-block py-3 px-9 rounded-md relative">
+                      <p className="font-poppins font-medium text-base text-white max-w-md overflow-hidden">
+                        {item.msg}
+                      </p>
+                      <BsTriangleFill className="text-primary absolute bottom-[-1px] -right-2 text-2xl" />
+                      <p className="font-poppins font-medium text-xs opacity-50 absolute -left-20 top-1/3 hidden group-hover:block">
+                        {moment(item.date).format("DD-MM-YYYY")}
+                      </p>
+                    </div>
+                    <p className="font-poppins font-medium text-xs opacity-50 mt-1">
+                      {moment(item.date).format("h:mma")}
                     </p>
-                    <BsTriangleFill className="text-primary absolute bottom-[-1px] -right-2 text-2xl" />
                   </div>
-                  <p className="font-poppins font-medium text-xs opacity-50 mt-1">
-                    Today, 2:01pm
-                  </p>
-                </div>
-              )
-            ) : item.whoSendId == activeChatName.active.id &&(
-              <div className="mb-8">
-                <div className="bg-slate-200 inline-block py-3 px-9 rounded-md relative">
-                  <p className="font-poppins font-medium text-base text-black">
-                    {item.msg}
-                  </p>
-                  <BsTriangleFill className="text-slate-200 absolute bottom-[-1px] -left-2 text-2xl" />
-                </div>
-                <p className="font-poppins font-medium text-xs opacity-50 mt-1">
-                  Today, 2:01pm
-                </p>
-              </div>
-            )
+                ) : (
+                  <div className="mb-8 text-right group">
+                    <div className="bg-primary inline-block p-3 w-72 rounded-md relative">
+                      <ModalImage small={item.img} large={item.img} />
+                      <BsTriangleFill className="text-primary absolute bottom-[-1px] -right-2 text-2xl" />
+                      <p className="font-poppins font-medium text-xs opacity-50 absolute -left-20 top-1/2 hidden group-hover:block">
+                        {moment(item.date).format("DD-MM-YYYY")}
+                      </p>
+                    </div>
+                    <p className="font-poppins font-medium text-xs opacity-50 mt-1">
+                      {moment(item.date).format("h:mma")}
+                    </p>
+                  </div>
+                ))
+              : item.whoSendId == activeChatName.active.id &&
+                (item.msg ? (
+                  <div className="mb-8 group">
+                    <div className="bg-slate-200 inline-block py-3 px-9 rounded-md relative">
+                      <p className="font-poppins font-medium text-base text-black max-w-md overflow-hidden">
+                        {item.msg}
+                      </p>
+                      <BsTriangleFill className="text-slate-200 absolute bottom-[-1px] -left-2 text-2xl" />
+                      <p className="font-poppins font-medium text-xs opacity-50 absolute -right-20 top-1/3 hidden group-hover:block">
+                        {moment(item.date).format("DD-MM-YYYY")}
+                      </p>
+                    </div>
+                    <p className="font-poppins font-medium text-xs opacity-50 mt-1">
+                      {moment(item.date).format("h:mma")}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="mb-8 group">
+                    <div className="bg-slate-200 inline-block p-3 w-72 rounded-md relative">
+                      <ModalImage small={item.img} large={item.img} />
+                      <BsTriangleFill className="text-slate-200 absolute bottom-[-1px] -left-2 text-2xl" />
+                      <p className="font-poppins font-medium text-xs opacity-50 absolute -right-20 top-1/2 hidden group-hover:block">
+                        {moment(item.date).format("DD-MM-YYYY")}
+                      </p>
+                    </div>
+                    <p className="font-poppins font-medium text-xs opacity-50 mt-1">
+                      {moment(item.date).format("h:mma")}
+                    </p>
+                  </div>
+                ))
           )
         ) : (
           <h1>ami group msg</h1>
@@ -276,7 +370,11 @@ const Chat = () => {
             className="bg-slate-100 p-4 w-full rounded-lg shadow-sm border"
           />
           <label>
-            <input className="hidden" type="file" />
+            <input
+              onChange={handleImageUpload}
+              className="hidden"
+              type="file"
+            />
             <GrGallery className="absolute right-5 bottom-1/4 text-2xl" />
           </label>
           <BsFillCameraFill

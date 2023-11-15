@@ -6,7 +6,7 @@ import { MdCloudUpload } from "react-icons/md";
 import { getAuth, signOut, updateProfile } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import  { userLoginInfo } from "../slices/userSlice";
+import { userLoginInfo } from "../slices/userSlice";
 import { RotatingLines } from "react-loader-spinner";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
@@ -18,7 +18,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 
-const Sidebar = ({active}) => {
+const Sidebar = ({ active }) => {
   const auth = getAuth();
   const db = getDatabase();
   const storage = getStorage();
@@ -61,8 +61,7 @@ const Sidebar = ({active}) => {
     setLoader(true);
     if (typeof cropper !== "undefined") {
       setCropData(cropper.getCroppedCanvas().toDataURL());
-
-      const storageRef = ref(storage, auth.currentUser.uid);
+      const storageRef = ref(storage, "profile/" + auth.currentUser.uid);
       const message4 = cropper.getCroppedCanvas().toDataURL();
       uploadString(storageRef, message4, "data_url").then((snapshot) => {
         getDownloadURL(storageRef).then((downloadURL) => {
@@ -70,7 +69,7 @@ const Sidebar = ({active}) => {
             photoURL: downloadURL,
           }).then(() => {
             const users = stref(db, "users/" + data.uid);
-            update(users, { profilePhoto:downloadURL});
+            update(users, { profilePhoto: downloadURL });
             dispatch(userLoginInfo(auth.currentUser));
             localStorage.setItem("userInfo", JSON.stringify(auth.currentUser));
             setLoader(false);
@@ -115,14 +114,30 @@ const Sidebar = ({active}) => {
           <MdCloudUpload className="text-2xl text-white" />
         </div>
       </div>
-      <div className={`relative ${active === "home" && "after:bg-white"}  after:w-[135%] after:h-[89px] after:content-[''] after:absolute after:top-[-18px] after:left-0 z-[1] after:z-[-1] mt-28 after:rounded-tl-2xl after:rounded-bl-2xl before:w-[8px] before:h-[89px] before:bg-primary before:absolute before:top-[-18px] before:right-[-36px] before:content-[''] before:rounded-tl-3xl before:rounded-bl-3xl`}>
+      <div
+        className={`relative ${
+          active === "home" && "after:bg-white"
+        }  after:w-[135%] after:h-[89px] after:content-[''] after:absolute after:top-[-18px] after:left-0 z-[1] after:z-[-1] mt-28 after:rounded-tl-2xl after:rounded-bl-2xl before:w-[8px] before:h-[89px] before:bg-primary before:absolute before:top-[-18px] before:right-[-36px] before:content-[''] before:rounded-tl-3xl before:rounded-bl-3xl`}
+      >
         <Link to="/">
-        <AiOutlineHome className={`text-5xl m-auto ${active=="home"?"text-primary":"text-[#BAD1FF]"} `} />
+          <AiOutlineHome
+            className={`text-5xl m-auto ${
+              active == "home" ? "text-primary" : "text-[#BAD1FF]"
+            } `}
+          />
         </Link>
       </div>
-      <div className={`relative ${active === "message" && "after:bg-white"}  after:w-[135%] after:h-[89px] after:content-[''] after:absolute after:top-[-18px] after:left-0 z-[1] after:z-[-1] mt-28 after:rounded-tl-2xl after:rounded-bl-2xl before:w-[8px] before:h-[89px] before:bg-primary before:absolute before:top-[-18px] before:right-[-36px] before:content-[''] before:rounded-tl-3xl before:rounded-bl-3xl`}>
+      <div
+        className={`relative ${
+          active === "message" && "after:bg-white"
+        }  after:w-[135%] after:h-[89px] after:content-[''] after:absolute after:top-[-18px] after:left-0 z-[1] after:z-[-1] mt-28 after:rounded-tl-2xl after:rounded-bl-2xl before:w-[8px] before:h-[89px] before:bg-primary before:absolute before:top-[-18px] before:right-[-36px] before:content-[''] before:rounded-tl-3xl before:rounded-bl-3xl`}
+      >
         <Link to="/message">
-        <AiFillMessage className={`text-5xl m-auto ${active=="message"?"text-primary":"text-[#BAD1FF]"} `} />
+          <AiFillMessage
+            className={`text-5xl m-auto ${
+              active == "message" ? "text-primary" : "text-[#BAD1FF]"
+            } `}
+          />
         </Link>
       </div>
       <div className="relative after:bg-none after:w-[135%] after:h-[89px] after:content-[''] after:absolute after:top-[-18px] after:left-0 z-[1] after:z-[-1] mt-24 after:rounded-tl-2xl after:rounded-bl-2xl before:w-[8px] before:h-[89px] before:bg-none before:absolute before:top-[-18px] before:right-[-36px] before:content-[''] before:rounded-tl-3xl before:rounded-bl-3xl">
