@@ -9,6 +9,8 @@ import { TbSend } from "react-icons/tb";
 import { GrGallery } from "react-icons/gr";
 import { AiFillAudio, AiFillCloseCircle } from "react-icons/ai";
 import { MdEmojiEmotions } from "react-icons/md";
+import { ImCross } from "react-icons/im";
+import { FaStop } from "react-icons/fa";
 import ModalImage from "react-modal-image";
 import Camera, { FACING_MODES, IMAGE_TYPES } from "react-html5-camera-photo";
 import "react-html5-camera-photo/build/css/index.css";
@@ -21,22 +23,26 @@ import {
   uploadBytesResumable,
   getDownloadURL,
   uploadString,
+  uploadBytes,
 } from "firebase/storage";
+import { ReactMediaRecorder } from "react-media-recorder";
 
 const Chat = () => {
   const db = getDatabase();
   const storage = getStorage();
 
   let [check, setCheck] = useState(false);
+  // let [imgUpPop, setImgUpPop] = useState(false);
   let [msg, setMsg] = useState("");
   let [msgList, setMsgList] = useState([]);
   let [captureImage, setCaptureImage] = useState("");
+  let [audioUrl, setAudioUrl] = useState("");
+  let [blob, setBlob] = useState();
   let data = useSelector((state) => state.userLoginInfo.userInfo);
   let activeChatName = useSelector((state) => state.activeChat);
   // console.log(activeChatName.active);
 
   let handleMsg = () => {
-    console.log(msg);
     if (activeChatName.active && activeChatName.active.status == "single") {
       set(push(ref(db, "singleMsg")), {
         msg: msg,
@@ -52,6 +58,34 @@ const Chat = () => {
       console.log("ami mingle");
     }
   };
+
+  // let handleAudioUrl = (mediaBlobUrl) => {
+  //   setAudioUrl(mediaBlobUrl);
+  //   const audioStorageRef = stref(storage, audioUrl);
+
+  //   uploadBytes(audioStorageRef, audioUrl).then((snapshot) => {
+  //     console.log("Uploaded a blob or file!");
+  //   });
+  // };
+
+  
+  let handleAudioSend = (mediaBlobUrl) => {
+    const audioStorageRef = stref(storage, audioUrl);
+
+// 'file' comes from the Blob or File API
+uploadBytes(audioStorageRef, mediaBlobUrl).then((snapshot) => {
+  console.log('Uploaded a blob or file!');
+});
+    setAudioUrl("")
+  };
+
+  //  // let handleImgUploadPopup = () => {
+  //   if (!imgUpPop) {
+  //     setImgUpPop(true)
+  //   } else {
+  //     setImgUpPop(false)
+  //   }
+  // }
 
   let handleImageUpload = (e) => {
     console.log(e.target.files[0]);
@@ -124,7 +158,7 @@ const Chat = () => {
       setMsgList(arr);
     });
   }, [activeChatName.active && activeChatName.active.id]);
-  
+
   return (
     <div className="bg-white shadow-lg px-12 py-6 rounded-xl">
       <div className="flex items-center justify-between border-b border-solid border-gray-300 pb-6 w-full">
@@ -154,8 +188,8 @@ const Chat = () => {
               ? item.whoReceiveId == activeChatName.active.id &&
                 (item.msg ? (
                   <div className="mb-8 text-right group ">
-                    <div className="bg-primary inline-block py-3 px-9 rounded-md relative">
-                      <p className="font-poppins font-medium text-base text-white max-w-md overflow-hidden">
+                    <div className="bg-primary inline-block py-3 px-7 rounded-md relative">
+                      <p className="font-poppins font-medium text-base text-white max-w-lg overflow-hidden break-words text-start">
                         {item.msg}
                       </p>
                       <BsTriangleFill className="text-primary absolute bottom-[-1px] -right-2 text-2xl" />
@@ -164,7 +198,7 @@ const Chat = () => {
                       </p>
                     </div>
                     <p className="font-poppins font-medium text-xs opacity-50 mt-1">
-                      {moment(item.date).format("h:mma")}
+                      {moment(item.date).format("ddd, h:mma")}
                     </p>
                   </div>
                 ) : (
@@ -177,15 +211,15 @@ const Chat = () => {
                       </p>
                     </div>
                     <p className="font-poppins font-medium text-xs opacity-50 mt-1">
-                      {moment(item.date).format("h:mma")}
+                      {moment(item.date).format("ddd, h:mma")}
                     </p>
                   </div>
                 ))
               : item.whoSendId == activeChatName.active.id &&
                 (item.msg ? (
                   <div className="mb-8 group">
-                    <div className="bg-slate-200 inline-block py-3 px-9 rounded-md relative">
-                      <p className="font-poppins font-medium text-base text-black max-w-md overflow-hidden">
+                    <div className="bg-slate-200 inline-block py-3 px-7 rounded-md relative">
+                      <p className="font-poppins font-medium text-base text-black max-w-lg overflow-hidden break-words">
                         {item.msg}
                       </p>
                       <BsTriangleFill className="text-slate-200 absolute bottom-[-1px] -left-2 text-2xl" />
@@ -194,7 +228,7 @@ const Chat = () => {
                       </p>
                     </div>
                     <p className="font-poppins font-medium text-xs opacity-50 mt-1">
-                      {moment(item.date).format("h:mma")}
+                      {moment(item.date).format("ddd, h:mma")}
                     </p>
                   </div>
                 ) : (
@@ -207,7 +241,7 @@ const Chat = () => {
                       </p>
                     </div>
                     <p className="font-poppins font-medium text-xs opacity-50 mt-1">
-                      {moment(item.date).format("h:mma")}
+                      {moment(item.date).format("ddd, h:mma")}
                     </p>
                   </div>
                 ))
@@ -362,6 +396,13 @@ const Chat = () => {
           </p>
         </div> */}
         {/* recieve video end */}
+        {/* <div>
+          <div className="p-4 bg-red-500 ">
+            <h1 className="font-opensans font-bold text-2xl text-primary">Upload Your Photo</h1>
+            <input />
+            
+          </div>
+        </div> */}
       </div>
       <div className="flex mt-5">
         <div className="relative flex w-[90%]">
@@ -372,6 +413,7 @@ const Chat = () => {
           <label>
             <input
               onChange={handleImageUpload}
+              // onClick={handleImgUploadPopup}
               className="hidden"
               type="file"
             />
@@ -381,7 +423,51 @@ const Chat = () => {
             onClick={() => setCheck(!check)}
             className="absolute right-14 bottom-1/4 text-2xl"
           />
-          <AiFillAudio className="absolute right-[90px] bottom-1/4 text-2xl" />
+          {/* <AiFillAudio className="absolute right-[90px] bottom-1/4 text-2xl" /> */}
+          <ReactMediaRecorder
+            audio
+            render={({
+              status,
+              startRecording,
+              stopRecording,
+              mediaBlobUrl,
+            }) => (
+              <div>
+                <p
+                  className={`bg-red-500 font-opensans font-semibold text-white py-1 px-2 rounded-md absolute -top-5 right-14 ${
+                    status == "idle" && "hidden"
+                  } ${status == "stopped" && "hidden"}`}
+                >
+                  {status}
+                </p>
+                {status == "recording" ? (
+                  <button onClick={stopRecording}>
+                    <FaStop
+                      title="Stop Recording"
+                      className="absolute right-[90px] bottom-1/4 mb-[2px] text-xl"
+                    />
+                  </button>
+                ) : (
+                  <button onClick={startRecording}>
+                    <AiFillAudio
+                      title="Start Recording"
+                      className="absolute right-[90px] bottom-1/4 text-2xl"
+                    />
+                  </button>
+                )}
+                {mediaBlobUrl && setAudioUrl(mediaBlobUrl)}
+                {audioUrl && (
+                  <button
+                    onClick={()=>handleAudioSend(mediaBlobUrl)}
+                    className="absolute bg-green-500 py-[5px] px-3 font-poppins font-semibold text-sm rounded-md -top-4 right-12"
+                  >
+                    Send Audio
+                  </button>
+                )}
+                {/* <audio src={mediaBlobUrl} controls /> */}
+              </div>
+            )}
+          />
           <MdEmojiEmotions className="absolute right-[120px] bottom-1/4 text-2xl" />
         </div>
         {check && (
