@@ -68,15 +68,28 @@ const Chat = () => {
   //   });
   // };
 
-  
   let handleAudioSend = (mediaBlobUrl) => {
-    const audioStorageRef = stref(storage, audioUrl);
-
-// 'file' comes from the Blob or File API
-uploadBytes(audioStorageRef, mediaBlobUrl).then((snapshot) => {
-  console.log('Uploaded a blob or file!');
-});
-    setAudioUrl("")
+    console.log(mediaBlobUrl);
+    const metadata = {
+      contentType: 'audio/mpeg',
+    };
+    const audioStorageRef = stref(storage, "audio/" + audioUrl);
+    uploadBytes(audioStorageRef, audioUrl).then((snapshot) => {
+      getDownloadURL(audioStorageRef).then((downloadURL) => {
+        set(push(ref(db, "singleMsg")), {
+          audio: downloadURL,
+          whoSendId: data.uid,
+          whoSendName: data.displayName,
+          whoReceiveId: activeChatName.active.id,
+          whoReceiveName: activeChatName.active.name,
+          date: `${new Date().getFullYear()}-${
+            new Date().getMonth() + 1
+          }-${new Date().getDate()}  ${new Date().getHours()}:${new Date().getMinutes()}`,
+        }).then(() => {
+          setAudioUrl("");
+        });
+      });
+    });
   };
 
   //  // let handleImgUploadPopup = () => {
@@ -88,7 +101,6 @@ uploadBytes(audioStorageRef, mediaBlobUrl).then((snapshot) => {
   // }
 
   let handleImageUpload = (e) => {
-    console.log(e.target.files[0]);
     const storageRef = stref(storage, "chatImg/" + e.target.files[0].name);
 
     const uploadTask = uploadBytesResumable(storageRef, e.target.files[0]);
@@ -202,7 +214,7 @@ uploadBytes(audioStorageRef, mediaBlobUrl).then((snapshot) => {
                       {moment(item.date).format("ddd, h:mma")}
                     </p>
                   </div>
-                ) : (
+                ) : item.img ? (
                   <div className="mb-8 text-right group">
                     <div className="bg-primary inline-block p-3 w-72 rounded-md relative">
                       <ModalImage small={item.img} large={item.img} />
@@ -213,6 +225,15 @@ uploadBytes(audioStorageRef, mediaBlobUrl).then((snapshot) => {
                     </div>
                     <p className="font-poppins font-medium text-xs opacity-50 mt-1">
                       {moment(item.date).format("ddd, h:mma")}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="mb-8 text-right ">
+                    <div className="inline-block">
+                      <audio src={item.audio} controls></audio>
+                    </div>
+                    <p className="font-poppins font-medium text-xs opacity-50 mt-1">
+                      Today, 2:01pm
                     </p>
                   </div>
                 ))
@@ -232,7 +253,7 @@ uploadBytes(audioStorageRef, mediaBlobUrl).then((snapshot) => {
                       {moment(item.date).format("ddd, h:mma")}
                     </p>
                   </div>
-                ) : (
+                ) : item.img ? (
                   <div className="mb-8 group">
                     <div className="bg-slate-200 inline-block p-3 w-72 rounded-md relative">
                       <ModalImage small={item.img} large={item.img} />
@@ -243,6 +264,15 @@ uploadBytes(audioStorageRef, mediaBlobUrl).then((snapshot) => {
                     </div>
                     <p className="font-poppins font-medium text-xs opacity-50 mt-1">
                       {moment(item.date).format("ddd, h:mma")}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="mb-8 ">
+                    <div className="inline-block">
+                      <audio src={item.audio} controls></audio>
+                    </div>
+                    <p className="font-poppins font-medium text-xs opacity-50 mt-1">
+                      Today, 2:01pm
                     </p>
                   </div>
                 ))
@@ -427,6 +457,9 @@ uploadBytes(audioStorageRef, mediaBlobUrl).then((snapshot) => {
           {/* <AiFillAudio className="absolute right-[90px] bottom-1/4 text-2xl" /> */}
           <ReactMediaRecorder
             audio
+            onStop={(mediaBlobUrl) => {
+              setAudioUrl(mediaBlobUrl);
+            }}
             render={({
               status,
               startRecording,
@@ -456,10 +489,10 @@ uploadBytes(audioStorageRef, mediaBlobUrl).then((snapshot) => {
                     />
                   </button>
                 )}
-                {mediaBlobUrl && setAudioUrl(mediaBlobUrl)}
+                {/* {mediaBlobUrl && setAudioUrl(mediaBlobUrl)} */}
                 {audioUrl && (
                   <button
-                    onClick={()=>handleAudioSend(mediaBlobUrl)}
+                    onClick={() => handleAudioSend(mediaBlobUrl)}
                     className="absolute bg-green-500 py-[5px] px-3 font-poppins font-semibold text-sm rounded-md -top-4 right-12"
                   >
                     Send Audio
