@@ -167,6 +167,7 @@ uploadBytes(audioStorageRef, mediaBlobUrl).then((snapshot) => {
             <img
               className="w-20 h-20 rounded-full"
               src={activeChatName.active && activeChatName.active.photo}
+              alt="Active Photo"
             />
             <div className="w-4 h-4 rounded-full bg-green-500 ring-2 absolute bottom-2 right-0"></div>
           </div>

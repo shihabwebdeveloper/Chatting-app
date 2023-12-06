@@ -57,6 +57,7 @@ const BlockedUser = () => {
           <img
             className="w-[60px] h-[60px] rounded-full mt-0.5"
             src={item.blockidPhoto}
+            alt="blockidPhoto"
           />
           <div className="pl-6 w-[190px] pt-1.5">
             <h3 className="font-poppins font-bold text-lg">
