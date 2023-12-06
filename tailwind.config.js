@@ -24,8 +24,8 @@ module.exports = {
       "2xl": "1536px",
     },
     backgroundImage: {
-      'forgotPassBG': "url('/img/hero-pattern.svg')",
-      'footer-texture': "url('/img/footer-texture.png')",
+      'forgotPassBG': "url('../public/images/forgotPassBG.png')",
+      'photoUpBG': "url('../public/images/photoUpBG.jpg')",
     }
   },
 };

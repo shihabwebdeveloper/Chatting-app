@@ -100,6 +100,7 @@ const Sidebar = ({ active }) => {
       <div className="group relative w-28 h-28 rounded-full">
         <img
           className="w-full mx-auto h-full rounded-full"
+          alt="photo"
           src={data && data.photoURL}
         />
         <div className="mx-auto">
@@ -153,9 +154,9 @@ const Sidebar = ({ active }) => {
         <ImExit className="text-5xl m-auto text-[#BAD1FF]" />
       </div>
       {imageuploadmodal && (
-        <div className="w-full h-screen bg-slate-600 absolute top-0 left-0 z-10 flex justify-center items-center">
-          <div className="w-2/4 bg-white rounded-xl p-8">
-            <h2 className="font-nunito font-bold text-5xl text-heading mb-3">
+        <div className="w-full h-screen bg-photoUpBG bg-cover bg-center absolute top-0 left-0 z-10 flex justify-center items-center">
+          <div className="w-2/4 bg-transparent backdrop-blur-md border border-gray-500 shadow-2xl rounded-xl p-8">
+            <h2 className="font-nunito font-bold text-5xl text-yellow-500 mb-3">
               Upload your profile
             </h2>
             {image ? (
@@ -163,14 +164,14 @@ const Sidebar = ({ active }) => {
                 <div className="img-preview w-full h-full rounded-full" />
               </div>
             ) : (
-              <img className="w-28 h-28 mx-auto rounded-full" src={data} />
+              <img className="w-28 h-28 mx-auto rounded-full" alt="" src={data} />
             )}
             <input
               onChange={handleProfileUpload}
               className="mt-8"
               type="file"
             />
-            {image ? (
+            {image && (
               <Cropper
                 className="mt-8"
                 style={{ height: 400, width: "100%" }}
@@ -190,8 +191,6 @@ const Sidebar = ({ active }) => {
                 }}
                 guides={true}
               />
-            ) : (
-              <h1></h1>
             )}
             <br />
             <div className="relative">

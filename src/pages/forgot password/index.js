@@ -6,11 +6,11 @@ import { ToastContainer, toast } from "react-toastify";
 const ForgotPassword = () => {
   const auth = getAuth();
   let [email, setEmail] = useState("");
-  
+
   let handleEmail = (e) => {
     setEmail(e.target.value);
   };
-  
+
   let navigate = useNavigate();
   let handleUpdate = () => {
     sendPasswordResetEmail(auth, email)
@@ -27,28 +27,29 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="bg-heading w-full h-screen flex justify-center items-center">
+    <div className="bg-forgotPassBG bg-cover bg-center w-full h-screen flex justify-center items-center">
       <ToastContainer position="bottom-center" theme="dark" />
-      <div className="bg-white w-96 p-5">
-        <div className="text-white text-center font-opensans font-bold text-xl">
+      <div className="bg-transparent backdrop-blur-lg py-8 px-10 rounded-xl border border-gray-600 shadow-lg">
+        <div className="text-white text-center font-poppins font-extrabold text-2xl">
           Forgot Password
         </div>
-        <div className="relative mt-16">
+        <div className="relative mt-8 mb-2.5">
           <input
             type="email"
-            className="border-para border-solid border w-full rounded-lg py-6 px-14"
+            className="border-para border-solid border bg-white rounded-lg py-6 px-14 w-96"
             onChange={handleEmail}
-          ></input>
-          <p className="font-nunito font-semibold text-sm text-heading absolute top-[-9px] left-9 bg-white px-5">
+          />
+          <p className="font-nunito font-semibold text-sm text-heading absolute top-[-9px] left-9 bg-white px-5 rounded-sm">
             Email Address
           </p>
+          <br/>
           <button
             onClick={handleUpdate}
-            className="bg-indigo-600 font-nunito font-semibold text-xl text-white p-5 rounded mt-5"
+            className="bg-indigo-600 font-nunito font-semibold text-xl text-white p-5 rounded-lg mt-5"
           >
             Update
           </button>
-          <button className="bg-indigo-600 font-nunito font-semibold text-xl ml-6 text-white p-5 rounded mt-5">
+          <button className="bg-indigo-600 font-nunito font-semibold text-xl ml-6 text-white p-5 rounded-lg mt-5">
             <Link to="/login">Back to Login</Link>
           </button>
         </div>
