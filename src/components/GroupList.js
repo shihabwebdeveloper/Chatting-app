@@ -1,32 +1,67 @@
 import React, { useEffect, useState } from "react";
 import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import { useSelector } from "react-redux";
+import {
+  getStorage,
+  ref as stref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 
 const GroupList = () => {
+  const storage = getStorage();
   const db = getDatabase();
-  let data = useSelector((state) => state.userLoginInfo.userInfo);
-  let [show, setShow] = useState(false);
-  let [groupName, setGroupName] = useState("");
-  let [groupTag, setGroupTag] = useState("");
-  let [groups, setGroups] = useState([]);
-  let [groupPending, setGroupPending] = useState([]);
+  const data = useSelector((state) => state.userLoginInfo.userInfo);
+  const [show, setShow] = useState(false);
+  const [groupName, setGroupName] = useState("");
+  const [groupTag, setGroupTag] = useState("");
+  const [groupImg, setGroupImg] = useState("");
+  const [groups, setGroups] = useState([]);
+  const [groupPending, setGroupPending] = useState([]);
 
-  let handleGroupCreateButton = () => {
+  const handleGroupCreateButton = () => {
     setShow(!show);
   };
 
-  let handleCreateGroup = () => {
-    if (groupName && groupTag) {
-      set(push(ref(db, "group")), {
-        groupName: groupName,
-        groupTag: groupTag,
-        adminId: data.uid,
-        adminName: data.displayName,
-        adminPhoto: data.photoURL,
-      }).then(() => {
+  const handleCreateGroup = async () => {
+    try {
+      if (groupName && groupTag) {
+        const imageURL = await handleGroupImg(groupImg);
+        await set(push(ref(db, "group")), {
+          groupName: groupName,
+          groupTag: groupTag,
+          groupImg: imageURL && imageURL,
+          adminId: data.uid,
+          adminName: data.displayName,
+          adminPhoto: data.photoURL,
+        });
         setShow(false);
-      });
+      } else {
+        console.error("Group name, group tag, and image are required.");
+      }
+    } catch (error) {
+      console.error("Error creating group:", error);
     }
+  };
+
+  const handleGroupImg = (imageFile) => {
+    return new Promise((resolve, reject) => {
+      const storageRef = stref(storage, `groupImg/${imageFile.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {},
+        (error) => {
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
   };
 
   let handleGroupRequest = (item) => {
@@ -47,7 +82,7 @@ const GroupList = () => {
     onValue(groupRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        if (data.uid != item.val().adminId) {
+        if (data.uid !== item.val().adminId) {
           arr.push({ ...item.val(), key: item.key });
         }
       });
@@ -89,16 +124,31 @@ const GroupList = () => {
             maxLength={15}
             onChange={(e) => setGroupTag(e.target.value)}
           />
+          {/* <input type="file" className="bg-red-500" onChange={(e) => setGroupImg(e.target.files[0])} /> */}
+          <div className="relative">
+            <input
+              type="file"
+              onChange={(e) => setGroupImg(e.target.files[0])}
+              className="sr-only"
+              id="groupImage"
+            />
+            <label
+              htmlFor="groupImage"
+              className="cursor-pointer border-2 border-dashed border-gray-500 py-1.5 px-4 rounded-lg text-gray-500 hover:border-primary hover:text-primary transition duration-300"
+            >
+                {groupImg ? groupImg.name : "Group Image"}
+            </label>
+          </div>
           <button
             onClick={handleCreateGroup}
-            className="w-full rounded-lg bg-green-500 text-white font-poppins font-semibold text-base hover:text-lg hover:mt-[-1px] hover:drop-shadow-lg duration-300 py-3"
+            className="w-full rounded-lg bg-green-500 text-white font-poppins font-semibold text-base hover:text-lg hover:mt-4 hover:drop-shadow-lg duration-300 mt-4 py-3"
           >
             Create Group
           </button>
         </div>
       ) : (
         <>
-          {groups.length == 0 ? (
+          {groups.length === 0 ? (
             <div className="flex justify-center items-center h-full">
               <h1 className="font-nunito font-bold text-xl text-black">
                 No groups available
@@ -106,11 +156,15 @@ const GroupList = () => {
             </div>
           ) : (
             groups.map((item) => (
-              <div className="flex justify-between mt-4 pt-5 w-full relative after:w-[400px] after:h-px after:bottom-[-13px] after:left-1 after:content-['']  after:absolute after:bg-[#BFBFBF]">
+              <div
+                key={item.key}
+                className="flex justify-between mt-4 pt-5 w-full relative after:w-[400px] after:h-px after:bottom-[-13px] after:left-1 after:content-['']  after:absolute after:bg-[#BFBFBF]"
+              >
                 <div className="flex">
                   <img
-                    className="w-[70px] h-[70px]"
-                    src="images/groupimg.png"
+                    className="w-[70px] h-[70px] rounded-full"
+                    src={item.groupImg || "images/groupimg.png"}
+                    alt=""
                   />
                   <div className="ml-6 mt-2">
                     <h5 className="font-poppins font-regular text-[#797979] text-base">
@@ -118,7 +172,6 @@ const GroupList = () => {
                     </h5>
                     <h3 className="font-poppins tracking-wider font-bold text-lg">
                       {item.groupName}
-                      {/* {item.key} */}
                     </h3>
                     <h5 className="font-poppins font-medium text-[#797979] text-sm">
                       {item.groupTag}
@@ -128,9 +181,7 @@ const GroupList = () => {
                 <div className="mr-1 mt-4">
                   {groupPending.includes(item.key + data.uid) ||
                   groupPending.includes(data.uid + item.key) ? (
-                    <button
-                      className="font-poppins font-semibold text-xl text-white px-3 py-1 rounded-md bg-red-600"
-                    >
+                    <button className="font-poppins font-semibold text-xl text-white px-3 py-1 rounded-md bg-red-600">
                       Pending
                     </button>
                   ) : (

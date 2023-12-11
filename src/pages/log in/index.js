@@ -114,7 +114,7 @@ const Login = () => {
             onClick={handleGoogleSignIn}
             className="flex py-5 px-5 border border-solid w rounded-lg mt-6 sm:hidden xl:block"
           >
-            <img className="inline-block" src="images/Google.png" />
+            <img className="inline-block" src="images/Google.png" alt=""/>
             <h2 className="font-opensans inline-block font-semibold text-sm text-primary ml-2.5">
               Login with Google
             </h2>
@@ -189,7 +189,7 @@ const Login = () => {
               onClick={handleGoogleSignIn}
               className="flex py-5 mt-7 justify-center border border-solid w-full shadow-sm rounded-lg xl:hidden"
             >
-              <img className="inline-block" src="images/Google.png" />
+              <img className="inline-block" src="images/Google.png "alt="" />
               <h2 className="font-opensans inline-block font-semibold text-sm text-primary ml-3">
                 Login with Google
               </h2>
@@ -218,6 +218,7 @@ const Login = () => {
         <img
           className="object-cover w-full h-screen"
           src="images/loginimg.png"
+          alt=""
         />
       </div>
     </div>

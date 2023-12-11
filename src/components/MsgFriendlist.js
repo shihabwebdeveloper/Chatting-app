@@ -110,6 +110,7 @@ const MsgFriendlist = () => {
           >
             <img
               className="w-[70px] h-[70px] rounded-full mt-0.5"
+              alt=""
               src={
                 item.senderPhoto === data.photoURL
                   ? item.recieverPhoto

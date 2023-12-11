@@ -77,6 +77,7 @@ const Friends = () => {
         <div className="flex mt-4 pt-5">
           <img
             className="w-[70px] h-[70px] rounded-full mt-0.5"
+            alt=""
             src={
               item.senderPhoto === data.photoURL
                 ? item.recieverPhoto

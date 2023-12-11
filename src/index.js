@@ -12,6 +12,7 @@ import Login from "./pages/log in";
 import Home from "./pages/home";
 import ForgotPassword from "./pages/forgot password";
 import Message from "./pages/message/message";
+import Group from "./pages/group";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "/message",
     element: <Message/>
+  },
+  {
+    path: "/group",
+    element: <Group/>
   },
 ]);
 

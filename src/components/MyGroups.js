@@ -129,6 +129,7 @@ const MyGroups = () => {
               <img
                 className="w-[80px] h-[80px] rounded-full"
                 src={item.userPhoto}
+                alt=""
               />
               <div className="ml-6 mt-2">
                 <h3 className="font-poppins font-bold text-lg">
@@ -164,6 +165,7 @@ const MyGroups = () => {
                 <img
                   className="w-[90px] h-[90px] rounded-full"
                   src={item.memberPhoto}
+                  alt=""
                 />
                 <div className="ml-6 mt-2">
                   <h3 className="font-poppins font-bold text-2xl flex items-center h-full">
@@ -199,7 +201,7 @@ const MyGroups = () => {
         myGroups.map((item) => (
           <div className="flex justify-between mt-4 pt-5 w-full relative after:w-[410px] after:h-px after:bottom-[-13px] after:left-2 after:content-['']  after:absolute after:bg-[#BFBFBF]">
             <div className="flex">
-              <img className="w-[70px] h-[70px]" src="images/groupimg.png" />
+              <img className="w-[70px] h-[70px] rounded-full" src={item.groupImg ? item.groupImg : "images/groupimg.png"} alt="" />
               <div className="ml-6 mt-2">
                 <h5 className="font-poppins font-medium text-[#797979] text-base">
                   Admin:{item.adminName}

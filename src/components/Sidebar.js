@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { AiOutlineHome, AiFillMessage, AiOutlineSetting } from "react-icons/ai";
 import { BsBell } from "react-icons/bs";
 import { ImExit } from "react-icons/im";
-import { MdCloudUpload } from "react-icons/md";
+import { MdCloudUpload, } from "react-icons/md";
+import { HiUserGroup } from "react-icons/hi2";
 import { getAuth, signOut, updateProfile } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -122,6 +123,7 @@ const Sidebar = ({ active }) => {
       >
         <Link to="/">
           <AiOutlineHome
+            title="Home"
             className={`text-5xl m-auto ${
               active == "home" ? "text-primary" : "text-[#BAD1FF]"
             } `}
@@ -135,17 +137,27 @@ const Sidebar = ({ active }) => {
       >
         <Link to="/message">
           <AiFillMessage
+            title="Messenger"
             className={`text-5xl m-auto ${
               active == "message" ? "text-primary" : "text-[#BAD1FF]"
             } `}
           />
         </Link>
       </div>
-      <div className="relative after:bg-none after:w-[135%] after:h-[89px] after:content-[''] after:absolute after:top-[-18px] after:left-0 z-[1] after:z-[-1] mt-24 after:rounded-tl-2xl after:rounded-bl-2xl before:w-[8px] before:h-[89px] before:bg-none before:absolute before:top-[-18px] before:right-[-36px] before:content-[''] before:rounded-tl-3xl before:rounded-bl-3xl">
-        <BsBell className="text-5xl m-auto text-[#BAD1FF]" />
+      <div className={`relative ${
+          active === "group" && "after:bg-white"
+        }  after:w-[135%] after:h-[89px] after:content-[''] after:absolute after:top-[-18px] after:left-0 z-[1] after:z-[-1] mt-28 after:rounded-tl-2xl after:rounded-bl-2xl before:w-[8px] before:h-[89px] before:bg-primary before:absolute before:top-[-18px] before:right-[-36px] before:content-[''] before:rounded-tl-3xl before:rounded-bl-3xl`}>
+        <Link to="/group">
+          <HiUserGroup
+            title="Groups"
+            className={`text-5xl m-auto ${
+              active == "group" ? "text-primary" : "text-[#BAD1FF]"
+            } `}
+          />
+        </Link>
       </div>
       <div className="relative after:bg-none after:w-[135%] after:h-[89px] after:content-[''] after:absolute after:top-[-18px] after:left-0 z-[1] after:z-[-1] mt-24 after:rounded-tl-2xl after:rounded-bl-2xl before:w-[8px] before:h-[89px] before:bg-none before:absolute before:top-[-18px] before:right-[-36px] before:content-[''] before:rounded-tl-3xl before:rounded-bl-3xl">
-        <AiOutlineSetting className="text-5xl m-auto text-[#BAD1FF]" />
+        <BsBell className="text-5xl m-auto text-[#BAD1FF]" />
       </div>
       <div
         onClick={handleLogOut}
@@ -164,7 +176,11 @@ const Sidebar = ({ active }) => {
                 <div className="img-preview w-full h-full rounded-full" />
               </div>
             ) : (
-              <img className="w-28 h-28 mx-auto rounded-full" alt="" src={data} />
+              <img
+                className="w-28 h-28 mx-auto rounded-full"
+                alt=""
+                src={data}
+              />
             )}
             <input
               onChange={handleProfileUpload}

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { getDatabase, ref, onValue, set, push } from "firebase/database";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { AiFillMessage } from "react-icons/ai";
+import { activeChat } from "../slices/activeChatSlice";
 
 const MsgGroups = () => {
   const db = getDatabase();
+  const dispatch = useDispatch();
   let data = useSelector((state) => state.userLoginInfo.userInfo);
   let [show, setShow] = useState(false);
   let [groupName, setGroupName] = useState("");
@@ -25,12 +27,25 @@ const MsgGroups = () => {
     });
   };
 
+  let handleGroupChat = (item) => {
+    dispatch(
+      activeChat({
+        status: "group",
+        id: item.key,
+        name: item.groupName,
+        photo: item.groupImg,
+        adminName: item.adminName,
+        adminId: item.adminId,
+      })
+    );
+  };
+
   useEffect(() => {
     const groupRef = ref(db, "group");
     onValue(groupRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-          arr.push({ ...item.val(), key: item.key });
+        arr.push({ ...item.val(), key: item.key });
       });
       setGroups(arr);
     });
@@ -58,9 +73,16 @@ const MsgGroups = () => {
         </div>
       ) : (
         groups.map((item) => (
-          <div className="flex justify-between mt-4 pt-5 w-full relative after:w-[400px] after:h-px after:bottom-[-13px] after:left-1 after:content-['']  after:absolute after:bg-[#BFBFBF]">
+          <div
+            onClick={() => handleGroupChat(item)}
+            className="flex justify-between mt-4 pt-5 w-full relative after:w-[400px] after:h-px after:bottom-[-13px] after:left-1 after:content-['']  after:absolute after:bg-[#BFBFBF]"
+          >
             <div className="flex">
-              <img className="w-[70px] h-[70px]" src="images/groupimg.png" />
+              <img
+                className="w-[70px] h-[70px] rounded-full"
+                src={item.groupImg || "images/groupimg.png"}
+                alt=""
+              />
               <div className="ml-6 mt-2">
                 <h5 className="font-poppins font-regular text-[#797979] text-base">
                   Admin:{item.adminName}
@@ -75,14 +97,12 @@ const MsgGroups = () => {
               </div>
             </div>
             <div className="mr-1 mt-4">
-              
-                <button
-                  onClick={() => handleGroupRequest(item)}
-                  className="font-poppins font-semibold text-xl text-white px-5 py-2 rounded-md bg-primary"
-                >
-                  <AiFillMessage />
-                </button>
-              
+              <button
+                onClick={() => handleGroupRequest(item)}
+                className="font-poppins font-semibold text-xl text-white px-5 py-2 rounded-md bg-primary"
+              >
+                <AiFillMessage />
+              </button>
             </div>
           </div>
         ))
